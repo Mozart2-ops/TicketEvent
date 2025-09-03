@@ -1,6 +1,7 @@
 import React from "react";
 import { Calendar, MapPin } from "lucide-react";
 import QRCode from "react-qr-code";
+import Navbar from "./Navbar";
 
 export default function Tickets() {
   // Exemple de tickets (à remplacer par données backend)
@@ -78,6 +79,7 @@ export default function Tickets() {
           </div>
         ))}
       </div>
+      <Navbar />
     </div>
   );
 }

@@ -1,76 +1,76 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
-import { Home, Ticket, User } from "lucide-react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import HomePage from "./components/client/Home";
+import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/client/PrivateRoute";
+
+import Home from "./components/client/Home";
+import Login from "./components/client/Login";
+import Register from "./components/client/Register";
 import EventDetails from "./components/client/EventDetails";
 import Tickets from "./components/client/Tickets";
 import Profile from "./components/client/Profile";
-import Login from "./components/client/Login";
-import Register from "./components/client/Register";
-import ReactDOM from "react-dom/client";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-export default function App() {
+function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-900 text-gray-200">
-        {/* Contenu des pages */}
-        <div className="pb-20">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/event/:id" element={<EventDetails />} />
-            <Route path="/tickets" element={<Tickets />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </div>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Routes publiques */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Barre de navigation sombre */}
-        <nav className="fixed bottom-0 w-full bg-gray-800 border-t border-gray-700 shadow-lg">
-          <div className="flex justify-around py-2">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `flex flex-col items-center text-xs transition ${
-                  isActive ? "text-blue-400" : "text-gray-400 hover:text-gray-200"
-                }`
-              }
-            >
-              <Home className="w-6 h-6" />
-              <span>Accueil</span>
-            </NavLink>
+          {/* Routes protégées */}
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/event/:id"
+            element={
+              <PrivateRoute>
+                <EventDetails />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/tickets"
+            element={
+              <PrivateRoute>
+                <Tickets />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
 
-            <NavLink
-              to="/tickets"
-              className={({ isActive }) =>
-                `flex flex-col items-center text-xs transition ${
-                  isActive ? "text-blue-400" : "text-gray-400 hover:text-gray-200"
-                }`
-              }
-            >
-              <Ticket className="w-6 h-6" />
-              <span>Tickets</span>
-            </NavLink>
-
-            <NavLink
-              to="/profile"
-              className={({ isActive }) =>
-                `flex flex-col items-center text-xs transition ${
-                  isActive ? "text-blue-400" : "text-gray-400 hover:text-gray-200"
-                }`
-              }
-            >
-              <User className="w-6 h-6" />
-              <span>Profil</span>
-            </NavLink>
-          </div>
-        </nav>
-      </div>
-    </Router>
+          {/* Route inconnue → redirection */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+// ✅ Fix: éviter de recréer le root plusieurs fois
+const rootElement = document.getElementById("app");
+if (rootElement && !rootElement._reactRootContainer) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(<App />);
+}
+
+export default App;
