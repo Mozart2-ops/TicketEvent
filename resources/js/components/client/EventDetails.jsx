@@ -1,12 +1,14 @@
-import React from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { MapPin, Calendar, Tag, Search, X, Home as HomeIcon, Ticket, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { AuthContext } from "../../context/AuthContext"; // ✅ ajout
 
 export default function EventDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext); // ✅ récupérer utilisateur
 
-  // Exemple statique (en vrai, ça viendra de ton API Laravel plus tard)
   const event = {
     id,
     title: "Concert Gospel Madagascar",
@@ -17,22 +19,31 @@ export default function EventDetails() {
     description:
       "Un événement exceptionnel avec les meilleurs artistes gospel de Madagascar. Vivez une expérience inoubliable avec de la musique, de l'émotion et une ambiance incroyable.",
     image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1600",
-    video: "https://www.w3schools.com/html/mov_bbb.mp4", // Exemple
+    video: "https://www.w3schools.com/html/mov_bbb.mp4",
   };
 
-  const [showSearch, setShowSearch] = React.useState(false);
-  const [search, setSearch] = React.useState("");
+  const [showSearch, setShowSearch] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const handleReserve = () => {
+  if (!user) {
+    // stocker l'événement en cours avant login
+    localStorage.setItem("pendingEventId", id);
+    navigate("/login");
+  } else {
+    navigate(`/payment/${id}`);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-200 font-sans">
-      {/* ✅ Header en haut (comme Home) */}
+      {/* Header (navbar + recherche) */}
       <div className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-4 bg-gradient-to-b from-black/80 to-black/40 backdrop-blur-md">
-        {/* Logo */}
         <h1 className="text-lg md:text-2xl font-extrabold text-white tracking-wide drop-shadow-lg">
           🎟️ TicketEvent
         </h1>
 
-        {/* Navigation */}
         <nav className="flex space-x-4 md:space-x-6 font-semibold text-gray-300 text-sm md:text-base">
           <Link to="/" className="flex items-center space-x-1 hover:text-white transition">
             <HomeIcon className="w-4 h-4" />
@@ -93,7 +104,6 @@ export default function EventDetails() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-transparent"></div>
 
-        {/* Titre dans l’image */}
         <div className="absolute bottom-6 left-6 md:left-12">
           <h1 className="text-2xl md:text-4xl font-extrabold text-white drop-shadow-lg">
             {event.title}
@@ -111,7 +121,6 @@ export default function EventDetails() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3 }}
       >
-        {/* Infos principales */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm md:text-base">
           <div className="flex items-center space-x-2">
             <Calendar className="w-5 h-5 text-blue-400" />
@@ -127,7 +136,6 @@ export default function EventDetails() {
           </div>
         </div>
 
-        {/* Description */}
         <motion.p
           className="text-gray-300 leading-relaxed text-sm md:text-base"
           initial={{ opacity: 0 }}
@@ -137,35 +145,31 @@ export default function EventDetails() {
           {event.description}
         </motion.p>
 
-        {/* Vidéo */}
         <motion.div
           className="rounded-2xl overflow-hidden shadow-xl mt-6"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <video
-            controls
-            className="w-full rounded-2xl border border-gray-800"
-          >
+          <video controls className="w-full rounded-2xl border border-gray-800">
             <source src={event.video} type="video/mp4" />
             Votre navigateur ne supporte pas la lecture vidéo.
           </video>
         </motion.div>
 
-        {/* CTA */}
+        {/* CTA Réservation protégée */}
         <motion.div
           className="mt-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          <Link
-            to="/tickets"
+          <button
+            onClick={handleReserve}
             className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white px-6 py-3 rounded-full font-semibold shadow-lg transition transform hover:scale-105"
           >
             Réserver mon ticket 🎟️
-          </Link>
+          </button>
         </motion.div>
       </motion.div>
     </div>

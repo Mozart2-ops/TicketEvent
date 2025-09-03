@@ -5,44 +5,61 @@ import { AuthContext } from "../../context/AuthContext";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Fake login → bientôt relié au backend Laravel
-    login({ email });
-    navigate("/");
+
+    // ⚡ À remplacer par ton API Laravel (login)
+    const fakeUser = { id: 1, name: "Jean Rakoto", email };
+
+    // enregistrer dans le contexte
+    setUser(fakeUser);
+
+    // vérifier si un événement était en attente
+    const pendingEventId = localStorage.getItem("pendingEventId");
+    if (pendingEventId) {
+      localStorage.removeItem("pendingEventId");
+      navigate(`/payment/${pendingEventId}`);
+    } else {
+      navigate("/"); // sinon accueil
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
-      <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-xl p-6">
-        <h1 className="text-2xl font-bold text-white text-center mb-6">Connexion 🔑</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input 
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 text-gray-200">
+      <div className="bg-gray-900 p-6 rounded-2xl shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-4">Connexion</h2>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200"
             required
+            className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700"
           />
-          <input 
+          <input
             type="password"
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200"
             required
+            className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700"
           />
-          <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold">
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-semibold shadow-lg"
+          >
             Se connecter
           </button>
         </form>
-        <p className="text-gray-400 text-sm text-center mt-6">
+        <p className="mt-4 text-sm text-gray-400">
           Pas encore de compte ?{" "}
-          <Link to="/register" className="text-blue-500">S’inscrire</Link>
+          <Link to="/register" className="text-blue-400 hover:underline">
+            S’inscrire
+          </Link>
         </p>
       </div>
     </div>

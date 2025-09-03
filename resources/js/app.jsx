@@ -11,6 +11,7 @@ import Register from "./components/client/Register";
 import EventDetails from "./components/client/EventDetails";
 import Tickets from "./components/client/Tickets";
 import Profile from "./components/client/Profile";
+import Payment from "./components/client/Payment";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -21,26 +22,12 @@ function App() {
       <Router>
         <Routes>
           {/* Routes publiques */}
+          <Route path="/"element={<Home />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
+       
           {/* Routes protégées */}
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Home />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/event/:id"
-            element={
-              <PrivateRoute>
-                <EventDetails />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/event/:id" element={<EventDetails />} />
           <Route
             path="/tickets"
             element={
@@ -54,6 +41,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/payment/:eventId"
+            element={
+              <PrivateRoute>
+                <Payment />
               </PrivateRoute>
             }
           />

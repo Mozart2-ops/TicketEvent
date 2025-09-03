@@ -1,94 +1,72 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Register() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    console.log("Register avec:", form);
+
+    // ⚡ À remplacer par ton API Laravel (register)
+    const newUser = { id: 2, name, email };
+
+    // enregistrer dans le contexte
+    setUser(newUser);
+
+    // vérifier si un événement était en attente
+    const pendingEventId = localStorage.getItem("pendingEventId");
+    if (pendingEventId) {
+      localStorage.removeItem("pendingEventId");
+      navigate(`/payment/${pendingEventId}`);
+    } else {
+      navigate("/"); // sinon accueil
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
-      <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-xl p-6">
-        <h1 className="text-2xl font-bold text-white text-center mb-6">
-          Créer un compte ✨
-        </h1>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-300 text-sm mb-1">Nom complet</label>
-            <input
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="Votre nom"
-              className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-blue-600 outline-none"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-300 text-sm mb-1">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="exemple@email.com"
-              className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-blue-600 outline-none"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-300 text-sm mb-1">Mot de passe</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="********"
-              className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-blue-600 outline-none"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-300 text-sm mb-1">Confirmer le mot de passe</label>
-            <input
-              type="password"
-              name="password_confirmation"
-              value={form.password_confirmation}
-              onChange={handleChange}
-              placeholder="********"
-              className="w-full px-4 py-2 rounded-lg bg-gray-800 text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-blue-600 outline-none"
-              required
-            />
-          </div>
-
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 text-gray-200">
+      <div className="bg-gray-900 p-6 rounded-2xl shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-4">Inscription</h2>
+        <form onSubmit={handleRegister} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Nom"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700"
+          />
+          <input
+            type="password"
+            placeholder="Mot de passe"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700"
+          />
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-semibold shadow-lg"
           >
             S’inscrire
           </button>
         </form>
-
-        <p className="text-gray-400 text-sm text-center mt-6">
-          Déjà un compte ?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
+        <p className="mt-4 text-sm text-gray-400">
+          Déjà inscrit ?{" "}
+          <Link to="/login" className="text-blue-400 hover:underline">
             Se connecter
           </Link>
         </p>
