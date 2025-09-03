@@ -1,88 +1,116 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { MapPin, Calendar, Tag } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function EventDetails() {
   const { id } = useParams();
 
-  // Exemple de données (à remplacer plus tard par l’API Laravel)
+  // Exemple statique (en vrai, ça viendra de ton API Laravel plus tard)
   const event = {
     id,
     title: "Concert Gospel Madagascar",
     date: "12 Septembre 2025",
-    location: "Stade Mahamasina, Antananarivo",
-    organizer: "Association Gospel Mada",
+    location: "Stade Mahamasina",
     price: "20 000 Ar",
-    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800",
-    video: "https://www.youtube.com/embed/ScMzIvxBSi4", // exemple
-    description: `
-      Venez vibrer au rythme du Gospel lors d’un concert exceptionnel réunissant
-      les meilleures chorales de Madagascar et des artistes internationaux.
-      Un spectacle unique qui promet une soirée pleine d’émotions et d’énergie.
-    `,
-    tickets: [
-      { type: "Standard", price: "20 000 Ar", remaining: 120 },
-      { type: "VIP", price: "50 000 Ar", remaining: 30 },
-    ]
+    category: "Concert",
+    description:
+      "Un événement exceptionnel avec les meilleurs artistes gospel de Madagascar. Vivez une expérience inoubliable avec de la musique, de l'émotion et une ambiance incroyable.",
+    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1600",
+    video: "https://www.w3schools.com/html/mov_bbb.mp4", // Exemple
   };
 
   return (
-    <div className="p-4 min-h-screen bg-gray-900 text-gray-200">
-      {/* Image de couverture */}
-      <div className="rounded-xl overflow-hidden shadow-lg mb-4">
+    <div className="min-h-screen bg-gray-950 text-gray-200 font-sans">
+      {/* Image Hero */}
+      <motion.div
+        className="relative h-72 md:h-[400px] overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
         <img
           src={event.image}
           alt={event.title}
-          className="w-full h-48 object-cover"
+          className="w-full h-full object-cover"
         />
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-transparent"></div>
 
-      {/* Titre & infos principales */}
-      <h1 className="text-2xl font-bold text-white">{event.title}</h1>
-      <p className="text-gray-400 mt-1">{event.date} • {event.location}</p>
-      <p className="text-sm text-gray-500">Organisé par {event.organizer}</p>
-
-      {/* Vidéo de présentation */}
-      <div className="mt-4 rounded-xl overflow-hidden shadow-md">
-        <iframe
-          width="100%"
-          height="200"
-          src={event.video}
-          title="Présentation de l'événement"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="w-full"
-        ></iframe>
-      </div>
-
-      {/* Description */}
-      <div className="mt-4">
-        <h2 className="text-lg font-semibold text-white">À propos de l’événement</h2>
-        <p className="mt-2 text-gray-300 leading-relaxed whitespace-pre-line">
-          {event.description}
-        </p>
-      </div>
-
-      {/* Catégories de tickets */}
-      <div className="mt-4">
-        <h2 className="text-lg font-semibold text-white">Tickets disponibles</h2>
-        <div className="space-y-2 mt-2">
-          {event.tickets.map((ticket, index) => (
-            <div key={index} className="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
-              <div>
-                <p className="font-semibold">{ticket.type}</p>
-                <p className="text-sm text-gray-400">{ticket.remaining} restants</p>
-              </div>
-              <span className="text-green-400 font-bold">{ticket.price}</span>
-            </div>
-          ))}
+        {/* Titre dans l’image */}
+        <div className="absolute bottom-6 left-6 md:left-12">
+          <h1 className="text-2xl md:text-4xl font-extrabold text-white drop-shadow-lg">
+            {event.title}
+          </h1>
+          <span className="mt-2 inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs md:text-sm px-3 py-1 rounded-full font-semibold shadow-md">
+            {event.category}
+          </span>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Bouton d'achat */}
-      <button className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold shadow-md">
-        Acheter un ticket
-      </button>
+      {/* Détails */}
+      <motion.div
+        className="px-6 md:px-16 py-8 space-y-6"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+      >
+        {/* Infos principales */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm md:text-base">
+          <div className="flex items-center space-x-2">
+            <Calendar className="w-5 h-5 text-blue-400" />
+            <p>{event.date}</p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <MapPin className="w-5 h-5 text-green-400" />
+            <p>{event.location}</p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Tag className="w-5 h-5 text-yellow-400" />
+            <p className="font-semibold">{event.price}</p>
+          </div>
+        </div>
+
+        {/* Description */}
+        <motion.p
+          className="text-gray-300 leading-relaxed text-sm md:text-base"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          {event.description}
+        </motion.p>
+
+        {/* Vidéo */}
+        <motion.div
+          className="rounded-2xl overflow-hidden shadow-xl mt-6"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          <video
+            controls
+            className="w-full rounded-2xl border border-gray-800"
+          >
+            <source src={event.video} type="video/mp4" />
+            Votre navigateur ne supporte pas la lecture vidéo.
+          </video>
+        </motion.div>
+
+        {/* CTA */}
+        <motion.div
+          className="mt-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+        >
+          <Link
+            to="/tickets"
+            className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white px-6 py-3 rounded-full font-semibold shadow-lg transition transform hover:scale-105"
+          >
+            Réserver mon ticket 🎟️
+          </Link>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

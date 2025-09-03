@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, MapPin, Calendar } from "lucide-react";
+import { Search, MapPin, Calendar, X, Home as HomeIcon, Ticket, User } from "lucide-react";
 import Slider from "react-slick";
-import { motion } from "framer-motion";
-import Navbar from "./Navbar";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Tous");
+  const [showSearch, setShowSearch] = useState(false);
 
   const events = [
     { 
@@ -50,89 +50,118 @@ export default function Home() {
     dots: true,
     infinite: true,
     speed: 600,
-    slidesToShow: 1.05,
+    slidesToShow: 1.2,
     slidesToScroll: 1,
     centerMode: true,
     arrows: false,
     autoplay: true,
     autoplaySpeed: 4000,
+    responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: 2 } },
+      { breakpoint: 1440, settings: { slidesToShow: 3 } }
+    ]
   };
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-200 font-sans">
-      {/* Hero section */}
+      {/* Hero avec header intégré */}
       <motion.div 
-        className="relative h-64"
+        className="relative h-80 md:h-[500px] overflow-hidden"
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
       >
         <img 
-          src="https://images.unsplash.com/photo-1504805572947-34fad45aed93?w=1200" 
+          src="https://images.unsplash.com/photo-1504805572947-34fad45aed93?w=1600" 
           alt="Hero" 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent flex flex-col justify-end p-6">
-          <motion.h1 
-            className="text-4xl font-extrabold text-white leading-tight tracking-tight drop-shadow-lg"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-          >
-            🎟️ Ticket Event
-          </motion.h1>
-          <motion.p 
-            className="text-gray-300 mt-1 text-sm font-light"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            Réservez vos événements en toute simplicité
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-          >
-            <Link 
-              to="/tickets" 
-              className="mt-3 inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg transition transform hover:scale-105"
-            >
-              Voir mes tickets
+
+        {/* Overlay animé */}
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/50 to-transparent"
+          animate={{ opacity: [0.9, 0.7, 0.9] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* Header intégré */}
+        <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 md:px-6 py-4 bg-gradient-to-b from-black/60 to-transparent">
+          {/* Logo */}
+          <h1 className="text-lg md:text-2xl font-extrabold text-white tracking-wide drop-shadow-lg">
+            🎟️ TicketEvent
+          </h1>
+
+          {/* Navigation */}
+          <nav className="flex space-x-4 md:space-x-6 font-semibold text-gray-300 text-sm md:text-base">
+            <Link to="/" className="flex items-center space-x-1 hover:text-white transition">
+              <HomeIcon className="w-4 h-4" />
+              <span>Accueil</span>
             </Link>
-          </motion.div>
+            <Link to="/tickets" className="flex items-center space-x-1 hover:text-white transition">
+              <Ticket className="w-4 h-4" />
+              <span>Tickets</span>
+            </Link>
+            <Link to="/profile" className="flex items-center space-x-1 hover:text-white transition">
+              <User className="w-4 h-4" />
+              <span>Profil</span>
+            </Link>
+          </nav>
+
+          {/* Recherche */}
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setShowSearch(!showSearch)}
+              className="p-2 rounded-full bg-gray-900/70 hover:bg-gray-800 transition"
+            >
+              {showSearch ? <X className="w-5 h-5 text-white" /> : <Search className="w-5 h-5 text-white" />}
+            </button>
+
+            <AnimatePresence>
+              {showSearch && (
+                <motion.div
+                  initial={{ width: 0, opacity: 0 }}
+                  animate={{ width: 200, opacity: 1 }}
+                  exit={{ width: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <input
+                    type="text"
+                    placeholder="Rechercher..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="px-3 py-1 rounded-lg bg-gray-900 text-gray-100 text-sm outline-none border border-gray-700 w-full"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
-        {/* Barre de recherche flottante */}
-        <motion.div 
-          className="absolute -bottom-6 left-6 right-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
-        >
-          <div className="flex items-center bg-gray-900 rounded-2xl px-3 py-2 shadow-lg border border-gray-700">
-            <Search className="text-gray-400 w-5 h-5 mr-2" />
-            <input 
-              type="text" 
-              placeholder="Rechercher un événement..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent flex-1 outline-none text-gray-100 placeholder-gray-500 text-sm"
-            />
-          </div>
-        </motion.div>
+        {/* Texte Hero */}
+        <div className="absolute bottom-10 left-6 md:left-12 max-w-xl">
+          <h2 className="text-2xl md:text-5xl font-extrabold text-white leading-tight drop-shadow-lg">
+            Réservez vos événements <br /> en toute simplicité
+          </h2>
+          <Link 
+            to="/tickets" 
+            className="mt-5 inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 text-white px-6 py-3 rounded-full text-sm md:text-lg font-semibold shadow-lg transition transform hover:scale-105"
+          >
+            🎫 Voir mes tickets
+          </Link>
+        </div>
       </motion.div>
 
-      <div className="px-4 mt-12">
-        {/* Filtres catégories */}
+      {/* Filtres catégories */}
+      <div className="px-4 md:px-12 mt-10">
         <div className="flex space-x-3 overflow-x-auto mb-6 pb-2 scrollbar-hide">
           {categories.map((cat, index) => (
             <motion.button 
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition transform hover:scale-105 ${
+              className={`px-5 py-2 rounded-full text-sm md:text-base font-medium whitespace-nowrap transition transform hover:scale-110 ${
                 activeCategory === cat 
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md" 
+                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg" 
                   : "bg-gray-800 text-gray-300 hover:bg-gray-700"
               }`}
               initial={{ opacity: 0, y: 20 }}
@@ -145,26 +174,30 @@ export default function Home() {
         </div>
 
         {/* Carrousel Populaires */}
-        <h2 className="text-lg font-bold mb-4 tracking-wide">🔥 Populaires</h2>
-        <Slider {...sliderSettings} className="mb-2">
+        <h2 className="text-lg md:text-2xl font-bold mb-4 tracking-wide">🔥 Populaires</h2>
+        <Slider {...sliderSettings} className="mb-10">
           {events.map(event => (
             <motion.div 
               key={event.id}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.05, rotate: -1 }}
               transition={{ type: "spring", stiffness: 200 }}
             >
               <Link to={`/event/${event.id}`} className="px-2 block">
-                <div className="relative rounded-2xl overflow-hidden shadow-xl">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                   <img 
                     src={event.image} 
                     alt={event.title} 
-                    className="w-full h-60 object-cover"
+                    className="w-full h-60 md:h-72 object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
                   <div className="absolute bottom-4 left-4 right-4">
-                    <span className="bg-blue-600 text-xs px-2 py-1 rounded-full font-semibold tracking-wide">{event.category}</span>
-                    <h3 className="font-bold text-lg text-white mt-1 leading-snug">{event.title}</h3>
-                    <p className="text-xs text-gray-300 flex items-center mt-1">
+                    <span className="bg-blue-600 text-xs px-2 py-1 rounded-full font-semibold tracking-wide shadow-md">
+                      {event.category}
+                    </span>
+                    <h3 className="font-bold text-lg md:text-xl text-white mt-1 leading-snug drop-shadow-md">
+                      {event.title}
+                    </h3>
+                    <p className="text-xs md:text-sm text-gray-300 flex items-center mt-1">
                       <Calendar className="w-4 h-4 mr-1" /> {event.date}
                     </p>
                   </div>
@@ -174,9 +207,9 @@ export default function Home() {
           ))}
         </Slider>
 
-        {/* Liste Tous les événements */}
-        <h2 className="text-lg font-bold mb-4 tracking-wide">📅 Tous les événements</h2>
-        <div className="space-y-5">
+        {/* Tous les événements */}
+        <h2 className="text-lg md:text-2xl font-bold mb-4 tracking-wide">📅 Tous les événements</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEvents.length > 0 ? (
             filteredEvents.map((event, index) => (
               <motion.div
@@ -184,52 +217,42 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index }}
-                whileHover={{ scale: 1.01 }}
+                whileHover={{ scale: 1.03, rotate: 1 }}
               >
                 <Link 
                   to={`/event/${event.id}`} 
-                  className="block rounded-2xl overflow-hidden shadow-md bg-gray-900 hover:bg-gray-800 transition relative"
+                  className="block rounded-2xl overflow-hidden shadow-xl bg-gray-900 hover:bg-gray-800 transition relative"
                 >
-                  <div className="flex">
-                    {/* Image + prix flottant */}
-                    <div className="relative">
-                      <img 
-                        src={event.image} 
-                        alt={event.title} 
-                        className="w-32 h-32 object-cover rounded-l-2xl"
-                      />
-                      <span className="absolute bottom-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold shadow-md">
-                        {event.price}
-                      </span>
-                    </div>
-
-                    {/* Infos */}
-                    <div className="p-3 flex flex-col justify-between flex-1">
-                      <div>
-                        <span className="inline-block bg-gray-700 text-xs px-2 py-1 rounded-full mb-1 font-medium">
-                          {event.category}
-                        </span>
-                        <h3 className="font-bold text-md text-white leading-snug">{event.title}</h3>
-                        <p className="text-xs text-gray-400 flex items-center mt-1">
-                          <Calendar className="w-4 h-4 mr-1" /> {event.date}
-                        </p>
-                        <p className="text-xs text-gray-400 flex items-center mt-1">
-                          <MapPin className="w-4 h-4 mr-1" /> {event.location}
-                        </p>
-                      </div>
-                    </div>
+                  <div className="relative">
+                    <img 
+                      src={event.image} 
+                      alt={event.title} 
+                      className="w-full h-48 object-cover"
+                    />
+                    <span className="absolute bottom-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold shadow-md">
+                      {event.price}
+                    </span>
+                  </div>
+                  <div className="p-4">
+                    <span className="inline-block bg-gray-700 text-xs px-2 py-1 rounded-full mb-1 font-medium">
+                      {event.category}
+                    </span>
+                    <h3 className="font-bold text-md md:text-lg text-white leading-snug">{event.title}</h3>
+                    <p className="text-xs md:text-sm text-gray-400 flex items-center mt-1">
+                      <Calendar className="w-4 h-4 mr-1" /> {event.date}
+                    </p>
+                    <p className="text-xs md:text-sm text-gray-400 flex items-center mt-1">
+                      <MapPin className="w-4 h-4 mr-1" /> {event.location}
+                    </p>
                   </div>
                 </Link>
               </motion.div>
             ))
           ) : (
-            <p className="text-center text-gray-500 text-sm">Aucun événement trouvé</p>
+            <p className="text-center text-gray-500 text-sm col-span-full">Aucun événement trouvé</p>
           )}
         </div>
       </div>
-
-      {/* Navigation fixe en bas */}
-      <Navbar />
     </div>
   );
 }
