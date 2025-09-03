@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { MapPin, Calendar, Tag } from "lucide-react";
-import { motion } from "framer-motion";
+import { MapPin, Calendar, Tag, Search, X, Home as HomeIcon, Ticket, User } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -20,8 +20,65 @@ export default function EventDetails() {
     video: "https://www.w3schools.com/html/mov_bbb.mp4", // Exemple
   };
 
+  const [showSearch, setShowSearch] = React.useState(false);
+  const [search, setSearch] = React.useState("");
+
   return (
     <div className="min-h-screen bg-gray-950 text-gray-200 font-sans">
+      {/* ✅ Header en haut (comme Home) */}
+      <div className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-6 py-4 bg-gradient-to-b from-black/80 to-black/40 backdrop-blur-md">
+        {/* Logo */}
+        <h1 className="text-lg md:text-2xl font-extrabold text-white tracking-wide drop-shadow-lg">
+          🎟️ TicketEvent
+        </h1>
+
+        {/* Navigation */}
+        <nav className="flex space-x-4 md:space-x-6 font-semibold text-gray-300 text-sm md:text-base">
+          <Link to="/" className="flex items-center space-x-1 hover:text-white transition">
+            <HomeIcon className="w-4 h-4" />
+            <span>Accueil</span>
+          </Link>
+          <Link to="/tickets" className="flex items-center space-x-1 hover:text-white transition">
+            <Ticket className="w-4 h-4" />
+            <span>Tickets</span>
+          </Link>
+          <Link to="/profile" className="flex items-center space-x-1 hover:text-white transition">
+            <User className="w-4 h-4" />
+            <span>Profil</span>
+          </Link>
+        </nav>
+
+        {/* Recherche */}
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setShowSearch(!showSearch)}
+            className="p-2 rounded-full bg-gray-900/70 hover:bg-gray-800 transition"
+          >
+            {showSearch ? <X className="w-5 h-5 text-white" /> : <Search className="w-5 h-5 text-white" />}
+          </button>
+
+          <AnimatePresence>
+            {showSearch && (
+              <motion.div
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: 200, opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <input
+                  type="text"
+                  placeholder="Rechercher..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="px-3 py-1 rounded-lg bg-gray-900 text-gray-100 text-sm outline-none border border-gray-700 w-full"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
       {/* Image Hero */}
       <motion.div
         className="relative h-72 md:h-[400px] overflow-hidden"
