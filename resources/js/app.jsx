@@ -13,6 +13,8 @@ import Tickets from "./components/client/Tickets";
 import Profile from "./components/client/Profile";
 import Payment from "./components/client/Payment";
 
+import Organisateur from "./components/organisateur/OrgHome";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -25,7 +27,7 @@ function App() {
           <Route path="/"element={<Home />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-       
+
           {/* Routes protégées */}
           <Route path="/event/:id" element={<EventDetails />} />
           <Route
@@ -49,6 +51,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Payment />
+              </PrivateRoute>
+            }
+          />
+           <Route
+            path="/organisateur"
+            element={
+              <PrivateRoute>
+                <Organisateur />
               </PrivateRoute>
             }
           />

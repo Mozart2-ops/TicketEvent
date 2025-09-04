@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Home, Ticket, User } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, Ticket, User, LogIn, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../context/AuthContext";
 
 export default function Navbar() {
   const location = useLocation();
-  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { user, logout } = useContext(AuthContext);
 
   const menu = [
     { name: "Accueil", path: "/", icon: <Home className="w-5 h-5" /> },
@@ -42,17 +43,45 @@ export default function Navbar() {
         </Link>
       ))}
 
-      {/* Bouton déconnexion animé */}
-      <motion.button
-        onClick={logout}
-        className="flex flex-col items-center text-xs text-red-500 hover:text-red-400"
-        whileHover={{ scale: 1.2, rotate: -5 }}
-        whileTap={{ scale: 0.9 }}
-        transition={{ type: "spring", stiffness: 300 }}
-      >
-        🚪
-        <span>Logout</span>
-      </motion.button>
+      {/* Affichage conditionnel : connexion/déconnexion */}
+      {user ? (
+        // Utilisateur connecté - bouton déconnexion
+        <motion.button
+          onClick={logout}
+          className="flex flex-col items-center text-xs text-red-500 hover:text-red-400"
+          whileHover={{ scale: 1.2, rotate: -5 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
+          🚪
+          <span>Déconnexion</span>
+        </motion.button>
+      ) : (
+        // Utilisateur non connecté - boutons inscription et connexion
+        <>
+          <motion.button
+            onClick={() => navigate("/login")}
+            className="flex flex-col items-center text-xs text-green-500 hover:text-green-400"
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <LogIn className="w-5 h-5" />
+            <span>Connexion</span>
+          </motion.button>
+
+          <motion.button
+            onClick={() => navigate("/register")}
+            className="flex flex-col items-center text-xs text-purple-500 hover:text-purple-400"
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <UserPlus className="w-5 h-5" />
+            <span>Inscription</span>
+          </motion.button>
+        </>
+      )}
     </motion.nav>
   );
 }

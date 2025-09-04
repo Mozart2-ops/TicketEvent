@@ -2,11 +2,11 @@ import React, { useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { motion } from "framer-motion";
-import { 
-  ArrowLeft, 
-  CreditCard, 
-  Smartphone, 
-  Shield, 
+import {
+  ArrowLeft,
+  CreditCard,
+  Smartphone,
+  Shield,
   Check,
   Ticket,
   Clock,
@@ -21,7 +21,7 @@ export default function Payment() {
   const [paymentMethod, setPaymentMethod] = useState("mvola");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  
+
   // Données simulées de l'événement
   const event = {
     id,
@@ -32,7 +32,7 @@ export default function Payment() {
     price: "20 000 Ar",
     image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500"
   };
-  
+
   // Données de paiement
   const paymentMethods = [
     { id: "mvola", name: "Mvola", icon: <Smartphone className="w-6 h-6" /> },
@@ -40,25 +40,25 @@ export default function Payment() {
     { id: "airtel", name: "Airtel Money", icon: <Smartphone className="w-6 h-6" /> },
     { id: "visa", name: "Carte Visa", icon: <CreditCard className="w-6 h-6" /> }
   ];
-  
+
   const handlePayment = () => {
     setIsProcessing(true);
     // Simulation de processus de paiement
     setTimeout(() => {
       setIsProcessing(false);
       setIsSuccess(true);
-      
+
       // Redirection après succès
       setTimeout(() => {
         navigate(`/ticket/${id}`);
       }, 2000);
     }, 3000);
   };
-  
+
   if (isSuccess) {
     return (
       <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center p-4">
-        <motion.div 
+        <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="bg-gray-900 rounded-2xl p-8 text-center max-w-md w-full"
@@ -73,7 +73,7 @@ export default function Payment() {
       </div>
     );
   }
-  
+
   return (
     <div className="min-h-screen bg-gray-950 text-gray-200">
       {/* Header */}
@@ -83,10 +83,10 @@ export default function Payment() {
         </button>
         <h1 className="text-xl font-semibold">Finaliser le paiement</h1>
       </div>
-      
+
       <div className="container mx-auto px-4 py-6 max-w-2xl">
         {/* Récapitulatif de l'événement */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-gray-900 rounded-xl p-4 mb-6"
@@ -105,9 +105,9 @@ export default function Payment() {
             <span className="font-bold text-lg">{event.price}</span>
           </div>
         </motion.div>
-        
+
         {/* Méthodes de paiement */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -136,9 +136,9 @@ export default function Payment() {
             ))}
           </div>
         </motion.div>
-        
+
         {/* Informations de paiement */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -181,6 +181,7 @@ export default function Payment() {
                 type="tel"
                 placeholder="+261 34 00 000 00"
                 className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none"
+                required
               />
               <p className="text-xs text-gray-500 mt-2">
                 Vous recevrez une demande de confirmation sur votre téléphone
@@ -188,9 +189,9 @@ export default function Payment() {
             </div>
           )}
         </motion.div>
-        
+
         {/* Sécurité */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -199,7 +200,7 @@ export default function Payment() {
           <Shield className="w-4 h-4 mr-2 text-green-400" />
           <span>Paiement 100% sécurisé et crypté</span>
         </motion.div>
-        
+
         {/* Bouton de paiement */}
         <motion.button
           initial={{ opacity: 0, y: 20 }}
