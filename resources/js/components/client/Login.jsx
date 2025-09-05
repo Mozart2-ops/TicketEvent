@@ -108,19 +108,19 @@ export default function Login() {
       // Appeler la fonction login du contexte
       login(userData, fakeToken);
 
-      // Redirection selon le statut de l'utilisateur
+      // Redirection selon le statut de l'utilisateur avec l'ID en paramètre
       if (userData.statut === "admin") {
-        navigate("/admin/dashboard");
+        navigate("/admin/dashboard", { state: { userId: userData.id } });
       } else if (userData.statut === "organisateur") {
-        navigate("/organisateur");
+        navigate("/organisateur", { state: { userId: userData.id } });
       } else {
         // Client ou statut null
         const pendingEventId = localStorage.getItem("pendingEventId");
         if (pendingEventId) {
           localStorage.removeItem("pendingEventId");
-          navigate(`/payment/${pendingEventId}`);
+          navigate(`/payment/${pendingEventId}`, { state: { userId: userData.id } });
         } else {
-          navigate("/");
+          navigate("/", { state: { userId: userData.id } });
         }
       }
 
