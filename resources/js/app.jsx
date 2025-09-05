@@ -12,8 +12,8 @@ import EventDetails from "./components/client/EventDetails";
 import Tickets from "./components/client/Tickets";
 import Profile from "./components/client/Profile";
 import Payment from "./components/client/Payment";
+import OrganisateurDashboard from "./components/organisateur/OrgHome"
 
-import Organisateur from "./components/organisateur/OrgHome";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -58,7 +58,7 @@ function App() {
             path="/organisateur"
             element={
               <PrivateRoute>
-                <Organisateur />
+                <OrganisateurDashboard />
               </PrivateRoute>
             }
           />

@@ -12,4 +12,10 @@ export default defineConfig({
         react(),
         tailwindcss(),
     ],
+    server: {
+        host: '0.0.0.0', // Permet les connexions externes
+        hmr: {
+            host: '10.0.0.92', // Ou votre adresse IP locale
+        },
+    },
 });

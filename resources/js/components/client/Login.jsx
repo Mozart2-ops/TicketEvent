@@ -13,7 +13,7 @@ export default function Login() {
   // Fonction pour formater le numéro de téléphone
   const formatPhoneNumber = (value) => {
     const numbers = value.replace(/\D/g, '');
-    
+
     if (numbers.length <= 3) {
       return numbers;
     } else if (numbers.length <= 5) {
@@ -33,26 +33,26 @@ export default function Login() {
   const validateForm = () => {
     const newErrors = {};
     const phoneDigits = telephone.replace(/\D/g, '');
-    
+
     // Validation du téléphone
     if (phoneDigits.length < 10) {
       newErrors.telephone = "Le numéro doit contenir au moins 10 chiffres";
     }
-    
+
     // Validation du mot de passe
     if (!password) {
       newErrors.password = "Le mot de passe est obligatoire";
     } else if (password.length < 6) {
       newErrors.password = "Le mot de passe doit contenir au moins 6 caractères";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -60,7 +60,7 @@ export default function Login() {
 
     try {
       const phoneDigits = telephone.replace(/\D/g, '');
-      
+
       // ⚡ SIMULATION - À REMPLACER PAR VOTRE API LARAVEL
       let userData;
       let isValid = false;
@@ -104,7 +104,7 @@ export default function Login() {
 
       // Stocker le token simulé
       const fakeToken = "fake-jwt-token-" + Date.now();
-      
+
       // Appeler la fonction login du contexte
       login(userData, fakeToken);
 
@@ -135,7 +135,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gray-950 text-gray-200 p-4">
       <div className="bg-gray-900 p-6 rounded-2xl shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Connexion</h2>
-        
+
         {errors.general && (
           <div className="bg-red-900 text-red-200 p-3 rounded-lg mb-4 text-sm">
             {errors.general}
