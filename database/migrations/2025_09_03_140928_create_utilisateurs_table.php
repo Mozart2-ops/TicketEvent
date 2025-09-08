@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('prenom');
-            $table->string('numero_telephone');
+            $table->string('telephone')->unique();
             $table->string('statut');
-            $table->string('mdp');
+            $table->string('mdp')->unique();;
             $table->timestamps();
         });
     }
