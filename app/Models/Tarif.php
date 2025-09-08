@@ -10,4 +10,9 @@ class Tarif extends Model
     use HasFactory;
 
      protected $fillable = ['montant','type'];
+
+       public function tarifID()
+    {
+        return $this->hasOne(Billet::class, 'tarif_id');
+    }
 }

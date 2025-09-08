@@ -22,7 +22,10 @@ return new class extends Migration
             $table->string('longDescription');
             $table->string('photoEvenement');
             $table->string('videoEvenement');
-            $table->string('note');
+            $table->string('evaluation');
+            $table->integer('nombre_de_place');
+            $table->string('etat');
+
             $table->timestamps();
         });
     }
