@@ -69,8 +69,8 @@ export default function Login() {
       if (phoneDigits === '0340000001' && password === 'admin123') {
         userData = {
           id: 1,
-          nom: "Admin",
-          prenom: "System",
+          nom: "Zoky",
+          prenom: "Jean Jack",
           telephone: telephone,
           statut: "admin",
           email: "admin@example.com"
@@ -110,7 +110,7 @@ export default function Login() {
 
       // Redirection selon le statut de l'utilisateur avec l'ID en paramètre
       if (userData.statut === "admin") {
-        navigate("/admin/dashboard", { state: { userId: userData.id } });
+        navigate("/administrateur", { state: { userId: userData.id } });
       } else if (userData.statut === "organisateur") {
         navigate("/organisateur", { state: { userId: userData.id } });
       } else {

@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { useParams } from "react-router-dom";
+
 
 export default function OrganisateurDashboard() {
   const { user, logout } = useContext(AuthContext);
@@ -116,6 +116,8 @@ export default function OrganisateurDashboard() {
   const filteredTickets = selectedEvent
     ? mockTickets.filter(ticket => ticket.eventId === selectedEvent.id)
     : [];
+
+console.log("ID de l'utilisateur:", userId);
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-200">
