@@ -10,4 +10,15 @@ class Utilisateur extends Model
     use HasFactory;
 
     protected $fillable = ['nom','prenom','numero_telephone','statut','mdp'];
+
+    public function organisateur()
+    {
+        return $this->hasMany(Evenement::class, 'organisateur_id');
+    } 
+    public function client_id_for_payment()
+    {
+        return $this->hasOne(Payment::class, 'client_id');
+    }
+
+  
 }

@@ -69,8 +69,8 @@ export default function Login() {
       if (phoneDigits === '0340000001' && password === 'admin123') {
         userData = {
           id: 1,
-          nom: "Admin",
-          prenom: "System",
+          nom: "Zoky",
+          prenom: "Jean Jack",
           telephone: telephone,
           statut: "admin",
           email: "admin@example.com"
@@ -108,19 +108,19 @@ export default function Login() {
       // Appeler la fonction login du contexte
       login(userData, fakeToken);
 
-      // Redirection selon le statut de l'utilisateur
+      // Redirection selon le statut de l'utilisateur avec l'ID en paramètre
       if (userData.statut === "admin") {
-        navigate("/admin/dashboard");
+        navigate("/administrateur", { state: { userId: userData.id } });
       } else if (userData.statut === "organisateur") {
-        navigate("/organisateur");
+        navigate("/organisateur", { state: { userId: userData.id } });
       } else {
         // Client ou statut null
         const pendingEventId = localStorage.getItem("pendingEventId");
         if (pendingEventId) {
           localStorage.removeItem("pendingEventId");
-          navigate(`/payment/${pendingEventId}`);
+          navigate(`/payment/${pendingEventId}`, { state: { userId: userData.id } });
         } else {
-          navigate("/");
+          navigate("/", { state: { userId: userData.id } });
         }
       }
 

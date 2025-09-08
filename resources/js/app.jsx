@@ -13,6 +13,7 @@ import Tickets from "./components/client/Tickets";
 import Profile from "./components/client/Profile";
 import Payment from "./components/client/Payment";
 import OrganisateurDashboard from "./components/organisateur/OrgHome"
+import AdminDashboard from "./components/administrateur/AdminHome"
 
 
 import "slick-carousel/slick/slick.css";
@@ -59,6 +60,14 @@ function App() {
             element={
               <PrivateRoute>
                 <OrganisateurDashboard />
+              </PrivateRoute>
+            }
+          />
+           <Route
+            path="/administrateur"
+            element={
+              <PrivateRoute>
+                <AdminDashboard />
               </PrivateRoute>
             }
           />

@@ -432,91 +432,6 @@ export default function Home() {
 
       {/* ===== CONTENU PRINCIPAL ===== */}
       <main className="container mx-auto px-4 md:px-6 py-10">
-        {/* ===== SECTION ÉVÉNEMENTS EN VEDETTE ===== */}
-        <motion.section
-          className="mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-        >
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold flex items-center">
-              <Star className="w-6 h-6 mr-2 text-yellow-400 fill-current" /> En vedette
-            </h2>
-            <Link to="/events" className="text-sm text-gray-400 hover:text-white flex items-center">
-              Voir tout <ChevronRight className="w-4 h-4 ml-1" />
-            </Link>
-          </div>
-
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <EventCardSkeleton />
-              <EventCardSkeleton />
-              <EventCardSkeleton />
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {featuredEvents.map((event, index) => (
-                <motion.div
-                  key={event.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * index }}
-                  whileHover={{ y: -5 }}
-                  className="relative"
-                >
-                  <Link
-                    to={`/event/${event.id}`}
-                    className="block rounded-2xl overflow-hidden shadow-xl bg-gray-900 hover:bg-gray-800 transition-all duration-300 group"
-                  >
-                    <div className="relative overflow-hidden">
-                      <img
-                        src={event.image}
-                        alt={event.title}
-                        className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute top-3 left-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs px-2 py-1 rounded-full font-semibold shadow-md">
-                        EN VEDETTE
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-gray-900 to-transparent"></div>
-                    </div>
-
-                    <div className="p-4">
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="inline-block bg-gray-700 text-xs px-2 py-1 rounded-full font-medium">
-                          {event.category}
-                        </span>
-                        <span className="flex items-center text-xs text-gray-300">
-                          <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
-                          {event.rating}
-                        </span>
-                      </div>
-
-                      <h3 className="font-bold text-lg text-white leading-snug line-clamp-2 mb-2 group-hover:text-blue-300 transition">
-                        {event.title}
-                      </h3>
-
-                      <div className="flex items-center text-xs text-gray-400 mb-2">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        <span>{event.date}</span>
-                      </div>
-
-                      <div className="flex items-center text-xs text-gray-400">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        <span className="line-clamp-1">{event.location}</span>
-                      </div>
-
-                      <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-800">
-                        <span className="text-blue-400 text-sm font-medium">{event.price}</span>
-                        <span className="text-xs text-gray-500">{event.ticketsAvailable} places</span>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </motion.section>
 
         {/* ===== FILTRES CATÉGORIES ===== */}
         <motion.section
@@ -623,7 +538,7 @@ export default function Home() {
 
         {/* ===== SECTION PAIEMENT SÉCURISÉ ===== */}
         <motion.section
-          className="mb-16 bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-8"
+          className="mb-4 bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 1.4 }}
