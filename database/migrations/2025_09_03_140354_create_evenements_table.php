@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('lieu');
             $table->string('categorie');
             $table->string('description');
-            $table->string('longDescription');
+            $table->text('longDescription');
             $table->string('photoEvenement')->nullable();
             $table->string('videoEvenement')->nullable();
             $table->string('evaluation');
