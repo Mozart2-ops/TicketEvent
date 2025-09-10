@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('nom');
             $table->string('prenom');
             $table->string('telephone')->unique();
-            $table->string('statut');
-            $table->string('mdp')->unique();;
+            $table->string('statut')->nullable();
+            $table->string('mdp')->unique();
             $table->timestamps();
         });
     }

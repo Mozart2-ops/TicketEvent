@@ -26,7 +26,7 @@ class Evenement extends Model
         'organisateur_id',
         'administration_id',
     ];
-    
+
      public function org()
     {
         return $this->belongsTo(Utilisateur::class, 'organisateur_id');
@@ -35,6 +35,10 @@ class Evenement extends Model
     public function admin()
     {
         return $this->belongsTo(Utilisateur::class, 'administration_id');
+    }
+     public function tarif()
+    {
+        return $this->belongsTo(Tarif::class, 'tarif_id');
     }
     public function evemement_id_for_billet()
     {

@@ -9,12 +9,11 @@ class Payment extends Model
 {
     use HasFactory;
 
-     protected $fillable = 
+     protected $fillable =
      [
-        'mobile_money',
+        'type',
         'date_de_payment',
         'client_id',
-        'evenement_id',
         'billet_id'
     ];
 }

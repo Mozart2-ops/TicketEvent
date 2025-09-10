@@ -1,8 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-
+import { useNavigate, useLocation } from "react-router-dom";
+import { QrCode, Ticket, Calendar, LogOut } from "lucide-react"; // icons
 
 export default function OrganisateurDashboard() {
   const { user, logout } = useContext(AuthContext);
@@ -16,9 +15,7 @@ export default function OrganisateurDashboard() {
   const location = useLocation();
   const userId = location.state?.userId;
 
-  console.log("ID de l'utilisateur:", userId);
-
-  // Données simulées pour les événements (à remplacer par l'API réelle)
+  // --- MOCK DATA ---
   const mockEvents = [
     {
       id: 1,
@@ -42,7 +39,6 @@ export default function OrganisateurDashboard() {
     }
   ];
 
-  // Simulation de données de billets (à remplacer par l'API réelle)
   const mockTickets = [
     {
       id: "TKT001",
@@ -74,7 +70,6 @@ export default function OrganisateurDashboard() {
   ];
 
   useEffect(() => {
-    // Charger les événements de l'organisateur
     setEvents(mockEvents);
     if (mockEvents.length > 0) {
       setSelectedEvent(mockEvents[0]);
@@ -91,12 +86,9 @@ export default function OrganisateurDashboard() {
       alert("Veuillez entrer un code de ticket");
       return;
     }
-
     setScanning(true);
-
-    // Simulation du scan (à remplacer par l'API réelle)
     setTimeout(() => {
-      const foundTicket = mockTickets.find(ticket => ticket.id === ticketData);
+      const foundTicket = mockTickets.find(t => t.id === ticketData);
       if (foundTicket) {
         setScanResult(foundTicket);
       } else {
@@ -107,7 +99,6 @@ export default function OrganisateurDashboard() {
   };
 
   const validateTicket = () => {
-    // Simulation de validation (à remplacer par l'API réelle)
     alert(`Ticket ${scanResult.id} validé avec succès!`);
     setScanResult(null);
     setTicketData("");
@@ -117,19 +108,20 @@ export default function OrganisateurDashboard() {
     ? mockTickets.filter(ticket => ticket.eventId === selectedEvent.id)
     : [];
 
-console.log("ID de l'utilisateur:", userId);
-
   return (
     <div className="min-h-screen bg-gray-950 text-gray-200">
       {/* Header */}
-      <header className="bg-gray-900 p-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold">Espace Organisateur</h1>
-        <div className="flex items-center space-x-4">
-          <span className="text-sm">Bonjour, {user?.prenom}</span>
+      <header className="bg-gray-900 p-4 flex justify-between items-center shadow">
+        <h1 className="text-xl font-bold">🎟️ Dashboard Organisateur</h1>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-gray-300">
+            Bonjour, <span className="font-semibold">{user?.prenom}</span>
+          </span>
           <button
             onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm"
+            className="flex items-center gap-1 bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm"
           >
+            <LogOut size={16} />
             Déconnexion
           </button>
         </div>
@@ -138,38 +130,39 @@ console.log("ID de l'utilisateur:", userId);
       <div className="p-4">
         {/* Navigation */}
         <div className="flex border-b border-gray-700 mb-6">
-          <button
-            className={`px-4 py-2 font-medium ${activeTab === "scanner" ? "border-b-2 border-blue-500 text-blue-400" : "text-gray-400"}`}
-            onClick={() => setActiveTab("scanner")}
-          >
-            Scanner
-          </button>
-          <button
-            className={`px-4 py-2 font-medium ${activeTab === "evenements" ? "border-b-2 border-blue-500 text-blue-400" : "text-gray-400"}`}
-            onClick={() => setActiveTab("evenements")}
-          >
-            Événements
-          </button>
-          <button
-            className={`px-4 py-2 font-medium ${activeTab === "billets" ? "border-b-2 border-blue-500 text-blue-400" : "text-gray-400"}`}
-            onClick={() => setActiveTab("billets")}
-          >
-            Billets
-          </button>
+          {[
+            { id: "scanner", label: "Scanner", icon: <QrCode size={18} /> },
+            { id: "evenements", label: "Événements", icon: <Calendar size={18} /> },
+            { id: "billets", label: "Billets", icon: <Ticket size={18} /> }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              className={`flex items-center gap-2 px-4 py-2 font-medium transition-all duration-200 ${
+                activeTab === tab.id
+                  ? "border-b-2 border-blue-500 text-blue-400"
+                  : "text-gray-400 hover:text-gray-200"
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.icon}
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        {/* Contenu du Scanner */}
+        {/* --- Scanner --- */}
         {activeTab === "scanner" && (
           <div className="space-y-6">
-            <div className="bg-gray-900 p-4 rounded-lg">
-              <h2 className="text-lg font-semibold mb-4">Scanner un ticket</h2>
-
+            <div className="bg-gray-900 p-4 rounded-lg shadow-md">
+              <h2 className="text-lg font-semibold mb-4">📷 Scanner un ticket</h2>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Sélectionner un événement</label>
+                <label className="block text-sm mb-1">Sélectionner un événement</label>
                 <select
                   className="w-full p-2 rounded bg-gray-800 border border-gray-700"
                   value={selectedEvent?.id || ""}
-                  onChange={(e) => setSelectedEvent(events.find(ev => ev.id === parseInt(e.target.value)))}
+                  onChange={e =>
+                    setSelectedEvent(events.find(ev => ev.id === parseInt(e.target.value)))
+                  }
                 >
                   {events.map(event => (
                     <option key={event.id} value={event.id}>
@@ -180,13 +173,13 @@ console.log("ID de l'utilisateur:", userId);
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Code du ticket</label>
+                <label className="block text-sm mb-1">Code du ticket</label>
                 <input
                   type="text"
-                  placeholder="Entrez le code du ticket"
+                  placeholder="Ex: TKT001"
                   className="w-full p-2 rounded bg-gray-800 border border-gray-700"
                   value={ticketData}
-                  onChange={(e) => setTicketData(e.target.value)}
+                  onChange={e => setTicketData(e.target.value)}
                 />
               </div>
 
@@ -195,14 +188,13 @@ console.log("ID de l'utilisateur:", userId);
                 disabled={scanning || !selectedEvent}
                 className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded font-medium disabled:opacity-50"
               >
-                {scanning ? "Scan en cours..." : "Scanner le ticket"}
+                {scanning ? "⏳ Scan en cours..." : "Scanner le ticket"}
               </button>
             </div>
 
             {scanResult && (
-              <div className="bg-gray-900 p-4 rounded-lg">
+              <div className="bg-gray-900 p-4 rounded-lg shadow-md transition-all duration-200">
                 <h3 className="text-lg font-semibold mb-4">Résultat du scan</h3>
-
                 {scanResult.error ? (
                   <div className="text-red-400">{scanResult.error}</div>
                 ) : (
@@ -213,7 +205,7 @@ console.log("ID de l'utilisateur:", userId);
                         <p className="font-medium">{scanResult.clientName}</p>
                       </div>
                       <div>
-                        <p className="text-gray-400 text-sm">Type de billet</p>
+                        <p className="text-gray-400 text-sm">Type</p>
                         <p className="font-medium">{scanResult.ticketType}</p>
                       </div>
                       <div>
@@ -222,18 +214,23 @@ console.log("ID de l'utilisateur:", userId);
                       </div>
                       <div>
                         <p className="text-gray-400 text-sm">Statut</p>
-                        <p className={`font-medium ${scanResult.status === "utilisé" ? "text-red-400" : "text-green-400"}`}>
+                        <span
+                          className={`px-2 py-1 rounded text-xs ${
+                            scanResult.status === "utilisé"
+                              ? "bg-red-900 text-red-200"
+                              : "bg-green-900 text-green-200"
+                          }`}
+                        >
                           {scanResult.status}
-                        </p>
+                        </span>
                       </div>
                     </div>
-
                     {scanResult.status !== "utilisé" && (
                       <button
                         onClick={validateTicket}
                         className="w-full bg-green-600 hover:bg-green-700 py-2 rounded font-medium"
                       >
-                        Valider l'entrée
+                        ✅ Valider l'entrée
                       </button>
                     )}
                   </>
@@ -243,18 +240,21 @@ console.log("ID de l'utilisateur:", userId);
           </div>
         )}
 
-        {/* Contenu des Événements */}
+        {/* --- Événements --- */}
         {activeTab === "evenements" && (
           <div>
-            <h2 className="text-lg font-semibold mb-4">Mes événements</h2>
-
+            <h2 className="text-lg font-semibold mb-4">🎉 Mes événements</h2>
             <div className="grid gap-4 md:grid-cols-2">
               {events.map(event => (
-                <div key={event.id} className="bg-gray-900 p-4 rounded-lg">
+                <div
+                  key={event.id}
+                  className="bg-gray-900 p-4 rounded-lg shadow hover:scale-[1.02] transition"
+                >
                   <h3 className="font-semibold text-lg mb-2">{event.title}</h3>
-                  <p className="text-gray-400 mb-1">{event.date} à {event.time}</p>
+                  <p className="text-gray-400 mb-1">
+                    {event.date} à {event.time}
+                  </p>
                   <p className="text-gray-400 mb-3">{event.location}</p>
-
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="bg-gray-800 p-2 rounded">
                       <p className="text-sm text-gray-400">Total</p>
@@ -262,7 +262,9 @@ console.log("ID de l'utilisateur:", userId);
                     </div>
                     <div className="bg-gray-800 p-2 rounded">
                       <p className="text-sm text-gray-400">Scannés</p>
-                      <p className="font-bold text-green-400">{event.scannedTickets}</p>
+                      <p className="font-bold text-green-400">
+                        {event.scannedTickets}
+                      </p>
                     </div>
                     <div className="bg-gray-800 p-2 rounded">
                       <p className="text-sm text-gray-400">Restants</p>
@@ -275,17 +277,18 @@ console.log("ID de l'utilisateur:", userId);
           </div>
         )}
 
-        {/* Contenu des Billets */}
+        {/* --- Billets --- */}
         {activeTab === "billets" && (
           <div>
-            <h2 className="text-lg font-semibold mb-4">Billets à scanner</h2>
-
+            <h2 className="text-lg font-semibold mb-4">🎟️ Billets à scanner</h2>
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Filtrer par événement</label>
+              <label className="block text-sm mb-2">Filtrer par événement</label>
               <select
                 className="w-full p-2 rounded bg-gray-800 border border-gray-700"
                 value={selectedEvent?.id || ""}
-                onChange={(e) => setSelectedEvent(events.find(ev => ev.id === parseInt(e.target.value)))}
+                onChange={e =>
+                  setSelectedEvent(events.find(ev => ev.id === parseInt(e.target.value)))
+                }
               >
                 {events.map(event => (
                   <option key={event.id} value={event.id}>
@@ -294,11 +297,10 @@ console.log("ID de l'utilisateur:", userId);
                 ))}
               </select>
             </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full bg-gray-900 rounded-lg">
+            <div className="overflow-x-auto rounded-lg shadow">
+              <table className="w-full bg-gray-900">
                 <thead>
-                  <tr className="border-b border-gray-700">
+                  <tr className="border-b border-gray-700 text-gray-300">
                     <th className="p-3 text-left">Code</th>
                     <th className="p-3 text-left">Client</th>
                     <th className="p-3 text-left">Type</th>
@@ -307,12 +309,21 @@ console.log("ID de l'utilisateur:", userId);
                 </thead>
                 <tbody>
                   {filteredTickets.map(ticket => (
-                    <tr key={ticket.id} className="border-b border-gray-800">
+                    <tr
+                      key={ticket.id}
+                      className="border-b border-gray-800 hover:bg-gray-800/50"
+                    >
                       <td className="p-3">{ticket.id}</td>
                       <td className="p-3">{ticket.clientName}</td>
                       <td className="p-3">{ticket.ticketType}</td>
                       <td className="p-3">
-                        <span className={`px-2 py-1 rounded text-xs ${ticket.status === "utilisé" ? "bg-red-900 text-red-200" : "bg-green-900 text-green-200"}`}>
+                        <span
+                          className={`px-2 py-1 rounded text-xs ${
+                            ticket.status === "utilisé"
+                              ? "bg-red-900 text-red-200"
+                              : "bg-green-900 text-green-200"
+                          }`}
+                        >
                           {ticket.status}
                         </span>
                       </td>
