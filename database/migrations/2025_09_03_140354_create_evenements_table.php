@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('categorie');
             $table->string('description');
             $table->string('longDescription');
-            $table->string('photoEvenement');
-            $table->string('videoEvenement');
+            $table->string('photoEvenement')->nullable();
+            $table->string('videoEvenement')->nullable();
             $table->string('evaluation');
             $table->integer('nombre_de_place');
             $table->string('etat');

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->string("mobile_money");
+            $table->string("type");
             $table->date("date_de_payment");
             $table->timestamps();
         });

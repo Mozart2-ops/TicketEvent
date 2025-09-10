@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::table('billets', function (Blueprint $table) {
             $table->unsignedBigInteger('evenement_id');
             $table->foreign('evenement_id')->references('id')->on('evenements')->onDelete('cascade');
-            $table->unsignedBigInteger('tarif_id');
-            $table->foreign('tarif_id')->references('id')->on('tarifs')->onDelete('cascade');
+
         });
     }
 
@@ -27,8 +26,7 @@ return new class extends Migration
         Schema::table('billets', function (Blueprint $table) {
             $table->dropForeign(['evenement_id']);
             $table->dropColumn('evenement_id');
-            $table->dropForeign(['tarif_id']);
-            $table->dropColumn('tarif_id');
+          
         });
     }
 };

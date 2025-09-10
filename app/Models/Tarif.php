@@ -11,8 +11,8 @@ class Tarif extends Model
 
      protected $fillable = ['montant','type'];
 
-       public function tarifID()
+    public function tarifID()
     {
-        return $this->hasOne(Billet::class, 'tarif_id');
+        return $this->hasOne(Evenement::class, 'tarif_id');
     }
 }

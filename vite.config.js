@@ -12,10 +12,12 @@ export default defineConfig({
         react(),
         tailwindcss(),
     ],
-    server: {
-        host: '0.0.0.0', // Permet les connexions externes
+   server: {
+        host: '0.0.0.0', // Permet l'accès depuis le réseau local
+        port: 5173, // Port par défaut de Vite
+        strictPort: true,
         hmr: {
-            host: 'localhost', // Ou votre adresse IP locale
+            host: 'localhost',
         },
     },
 });

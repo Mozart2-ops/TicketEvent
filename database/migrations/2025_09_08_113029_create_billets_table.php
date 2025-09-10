@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('billets', function (Blueprint $table) {
             $table->id();
-            $table->string('qr_code');
+            $table->string('qr_code')->unique();
             $table->string('etat');
             $table->integer('nombre_de_personne');
             $table->timestamps();
