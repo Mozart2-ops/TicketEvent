@@ -5,7 +5,7 @@ import AdminUsers from './AdminUsers';
 import { AuthContext } from '../../context/AuthContext';
 
 export default function AdminDashboard() {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [stats, setStats] = useState({
@@ -161,6 +161,10 @@ export default function AdminDashboard() {
         return renderDashboard();
     }
   };
+   const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-200">
@@ -178,7 +182,7 @@ export default function AdminDashboard() {
               <button className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white">
                 <Settings size={20} />
               </button>
-              <button className="flex items-center text-gray-400 hover:text-white">
+              <button onClick={handleLogout} className="flex items-center text-gray-400 hover:text-white">
                 <LogOut size={20} className="mr-2" />
                 Déconnexion
               </button>

@@ -4,12 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Utilisateur extends Model
+class Utilisateur extends Authenticatable
 {
-    use HasFactory;
-
+   use Notifiable;
+    protected $table = 'utilisateurs';
     protected $fillable = ['nom','prenom','telephone','statut','mdp'];
+
+    protected $hidden = [
+        'mdp',
+        'remember_token',
+    ];
+     protected $casts = [
+        'mdp' => 'hashed',
+    ];
+       public function getAuthPassword()
+    {
+        return $this->mdp;
+    }
 
     public function organisateur()
     {
