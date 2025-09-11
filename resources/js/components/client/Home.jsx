@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Slider from "react-slick";
 import { motion, AnimatePresence } from "framer-motion";
+import useEvenement from "../../hooks/useEvenement";
 
 export default function Home() {
   // ===== ÉTATS (STATES) =====
@@ -20,7 +21,10 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [featuredEvents, setFeaturedEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [setLoading] = useState(true);
+  const baseUrl = "http://10.0.0.141:8000/storage/images/";
+    // ===== DONNÉES DES ÉVÉNEMENTS =====
+  const { evenements, loading, error } = useEvenement();
 
   // ===== EFFETS (USE EFFECT) =====
   useEffect(() => {
@@ -36,68 +40,22 @@ export default function Home() {
   useEffect(() => {
     // Simuler un appel API avec un délai
     const timer = setTimeout(() => {
-      setFeaturedEvents(events.slice(0, 3));
+      setFeaturedEvents(evenements.slice(0, 3));
       setLoading(false);
     }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  // ===== DONNÉES DES ÉVÉNEMENTS =====
-  const events = [
-    {
-      id: 1,
-      title: "Concert Gospel Madagascar",
-      date: "12 Septembre 2025",
-      time: "18:00",
-      location: "Stade Mahamasina",
-      price: "20 000 Ar",
-      category: "Concert",
-      image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200",
-      rating: 4.8,
-      attendees: 1250,
-      views: 2450,
-      ticketsAvailable: 150
-    },
-    {
-      id: 2,
-      title: "Match Barea vs Sénégal",
-      date: "20 Septembre 2025",
-      time: "15:30",
-      location: "Mahamasina Arena",
-      price: "15 000 Ar",
-      category: "Sport",
-      image: "https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?w=1200",
-      rating: 4.9,
-      attendees: 3500,
-      views: 5200,
-      ticketsAvailable: 200
-    },
-    {
-      id: 3,
-      title: "Festival Mada Music",
-      date: "30 Septembre 2025",
-      time: "10:00 - 22:00",
-      location: "Jardin d'Antaninarenina",
-      price: "25 000 Ar",
-      category: "Festival",
-      image: "https://images.unsplash.com/photo-1504805572947-34fad45aed93?w=1200",
-      rating: 4.7,
-      attendees: 2800,
-      views: 4300,
-      ticketsAvailable: 75
-    }
-  ];
-
   const categories = ["Tous", "Concert", "Sport", "Festival", "Théâtre", "Exposition"];
 
   // ===== FONCTIONS DE FILTRAGE =====
-  const filteredEvents = events.filter(event =>
+  const filteredEvents = evenements.filter(event =>
     (activeCategory === "Tous" || event.category === activeCategory) &&
     event.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  const trendingEvents = [...events].sort((a, b) => b.views - a.views).slice(0, 3);
+  const trendingEvents = [...evenements].sort((a, b) => b.views - a.views).slice(0, 3);
 
   // ===== CONFIGURATION DU SLIDER =====
   const sliderSettings = {
@@ -486,7 +444,8 @@ export default function Home() {
           </div>
 
           <Slider {...sliderSettings} className="mb-10">
-            {events.slice(0, 4).map(event => (
+
+            {evenements.slice(0, 4).map(event => (
               <motion.div
                 key={event.id}
                 whileHover={{ scale: 1.03 }}
@@ -495,8 +454,8 @@ export default function Home() {
                 <Link to={`/event/${event.id}`} className="px-2 block focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-2xl">
                   <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
                     <img
-                      src={event.image}
-                      alt={event.title}
+                      src={`http://10.0.0.141:8000/storage/${event.photoEvenement}`}
+                      alt={event.titre}
                       className="w-full h-60 md:h-72 object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
@@ -508,24 +467,24 @@ export default function Home() {
 
                     <div className="absolute bottom-4 left-4 right-4">
                       <span className="bg-blue-600 text-xs px-3 py-1.5 rounded-full font-semibold tracking-wide shadow-md">
-                        {event.category}
+                        {event.categorie}
                       </span>
                       <h3 className="font-bold text-xl text-white mt-2 leading-snug line-clamp-1">
-                        {event.title}
+                        {event.titre}
                       </h3>
                       <div className="flex items-center mt-2 text-sm text-gray-300">
                         <Calendar className="w-4 h-4 mr-1" />
-                        <span>{event.date}</span>
+                        <span>{event.dateEvenement}</span>
                         <Clock className="w-4 h-4 ml-3 mr-1" />
-                        <span>{event.time}</span>
+                        <span>{event.heure}</span>
                       </div>
                       <div className="flex justify-between items-center mt-3">
                         <span className="bg-gray-900/70 text-white text-sm px-3 py-1.5 rounded-full font-medium">
-                          {event.price}
+                          20 000
                         </span>
                         <span className="flex items-center text-sm text-white bg-gray-900/70 px-2 py-1 rounded-full">
                           <Star className="w-4 h-4 mr-1 text-yellow-400 fill-current" />
-                          {event.rating}
+                          {event.evaluation}
                         </span>
                       </div>
                     </div>
@@ -624,12 +583,12 @@ export default function Home() {
                   >
                     <div className="relative overflow-hidden">
                       <img
-                        src={event.image}
-                        alt={event.title}
+                        src={`http://10.0.0.141:8000/storage/${event.photoEvenement}`}
+                        alt={event.titre}
                         className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       <span className="absolute top-3 right-3 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold shadow-md">
-                        {event.price}
+                       20 000
                       </span>
                       <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-gray-900 to-transparent"></div>
                     </div>
@@ -637,28 +596,28 @@ export default function Home() {
                     <div className="p-4">
                       <div className="flex justify-between items-start mb-2">
                         <span className="inline-block bg-gray-700 text-xs px-2 py-1 rounded-full font-medium">
-                          {event.category}
+                          {event.categorie}
                         </span>
                         <span className="flex items-center text-xs text-gray-300">
                           <Star className="w-3 h-3 mr-1 text-yellow-400 fill-current" />
-                          {event.rating}
+                          {event.evaluation}
                         </span>
                       </div>
 
                       <h3 className="font-bold text-lg text-white leading-snug line-clamp-2 mb-2 group-hover:text-blue-300 transition">
-                        {event.title}
+                        {event.titre}
                       </h3>
 
                       <div className="flex items-center text-xs text-gray-400 mb-2">
                         <Calendar className="w-4 h-4 mr-1" />
-                        <span>{event.date}</span>
+                        <span>{event.dateEvenement}</span>
                         <Clock className="w-4 h-4 ml-3 mr-1" />
-                        <span>{event.time}</span>
+                        <span>{event.heure}</span>
                       </div>
 
                       <div className="flex items-center text-xs text-gray-400">
                         <MapPin className="w-4 h-4 mr-1" />
-                        <span className="line-clamp-1">{event.location}</span>
+                        <span className="line-clamp-1">{event.lieu}</span>
                       </div>
 
                       <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-800">

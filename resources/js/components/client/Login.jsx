@@ -34,7 +34,7 @@ export default function Login() {
       if (res?.user) {
         const userData = res.user;
 
-        if (userData.statut === "admin") navigate("/administrateur", { state: { userId: userData.id } });
+        if (userData.statut === "administrateur") navigate("/administrateur", { state: { userId: userData.id } });
         else if (userData.statut === "organisateur") navigate("/organisateur", { state: { userId: userData.id } });
         else {
           const pendingEventId = localStorage.getItem("pendingEventId");

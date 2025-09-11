@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InscriptionController;
+use App\Http\Controllers\EvenementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +18,7 @@ use App\Http\Controllers\InscriptionController;
 
 Route::post('/register', [InscriptionController::class, 'store']);
 Route::post('/login', [InscriptionController::class, 'login']);
+
+Route::get('/evenements', [EvenementController::class, 'index']);
 
 

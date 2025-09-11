@@ -25,6 +25,7 @@ class Evenement extends Model
         'nombre_de_place',
         'organisateur_id',
         'administration_id',
+        'tarif_id'
     ];
 
      public function org()
