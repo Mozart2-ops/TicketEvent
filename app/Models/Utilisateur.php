@@ -6,26 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Utilisateur extends Authenticatable
+class Utilisateur extends Model
 {
-   use Notifiable;
+    use HasApiTokens, Notifiable; // note pour le token necéssaire
     protected $table = 'utilisateurs';
     protected $fillable = ['nom','prenom','telephone','statut','mdp'];
 
-    protected $hidden = [
-        'mdp',
-        'remember_token',
-    ];
-     protected $casts = [
-        'mdp' => 'hashed',
-    ];
-       public function getAuthPassword()
-    {
-        return $this->mdp;
-    }
-
+    protected $hidden = ['mdp']; //note pour le token necéssaire
     public function organisateur()
     {
         return $this->hasMany(Evenement::class, 'organisateur_id');

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-
 use App\Models\Utilisateur;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str; // pour générer le token
 
 class InscriptionController extends Controller
 {
@@ -15,21 +14,64 @@ class InscriptionController extends Controller
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
-            'telephone' => 'required|string|unique:users,telephone',
-            'password' => 'required|string|min:6|confirmed',
+            'telephone' => 'required|string|min:10|unique:utilisateurs,telephone',
+            'mdp' => 'required|string|min:6|confirmed',
         ]);
 
         $user = Utilisateur::create([
             'nom' => $validated['nom'],
             'prenom' => $validated['prenom'],
             'telephone' => $validated['telephone'],
-            'statut' => null, // client par défaut
-            'mdp' => Hash::make($validated['password']),
+            'mdp' => Hash::make($validated['mdp']),
         ]);
 
-        // Connexion automatique après inscription
-        auth()->login($user);
+        // Générer un token aléatoire
+        $token = Str::random(60);
 
-        return redirect()->route('/home'); // redirige vers un dashboard ou accueil
+        // Stocker le token dans le champ remember_token
+        $user->remember_token = $token;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Inscription réussie',
+            'user' => $user,
+            'token' => $token
+        ], 201);
     }
+
+     // Login
+      public function login(Request $request)
+    {
+        $request->validate([
+            'telephone' => 'required|string',
+            'mdp' => 'required|string|min:6',
+        ]);
+
+        $telephone = preg_replace('/\D/', '', $request->telephone);
+
+        $user = Utilisateur::where('telephone', $telephone)->first();
+
+        if (!$user || !Hash::check($request->mdp, $user->mdp)) {
+            return response()->json([
+                'message' => 'Numéro de téléphone ou mot de passe incorrect'
+            ], 401);
+        }
+
+        // Retourner le token stocké dans remember_token
+        $token = $user->remember_token;
+
+        return response()->json([
+            'message' => 'Connexion réussie',
+            'user' => [
+                'id' => $user->id,
+                'nom' => $user->nom,
+                'prenom' => $user->prenom,
+                'telephone' => $user->telephone,
+                'statut' => $user->statut,
+            ],
+            'token' => $token
+        ]);
+    }
+
+
 }

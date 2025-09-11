@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use App\Http\Controllers\InscriptionController;
 
 /*
@@ -19,8 +18,4 @@ Route::get('/{any}', function () {
     return view('Home');
 })->where('any', '.*');
 
-Route::get('/register', function () {
-    return Inertia('components/client/Register');
-})->name('register.show');
 
-Route::post('/register', [InscriptionController::class, 'store'])->name('register.store');

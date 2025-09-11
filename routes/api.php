@@ -15,4 +15,7 @@ use App\Http\Controllers\InscriptionController;
 |
 */
 
+Route::post('/register', [InscriptionController::class, 'store']);
+Route::post('/login', [InscriptionController::class, 'login']);
+
 

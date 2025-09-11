@@ -56,7 +56,7 @@ export default function Profile() {
         <div className="flex flex-col items-center">
           <div className="relative">
             <img
-              src={`https://ui-avatars.com/api/?name=${user?.email || "User"}&background=0D8ABC&color=fff&size=128`}
+              src={`https://ui-avatars.com/api/?name=${user?.nom || "User"}&background=0D8ABC&color=fff&size=128`}
               alt="Avatar"
               className="w-24 h-24 rounded-full border-4 border-gray-900 shadow-xl"
             />
@@ -64,7 +64,7 @@ export default function Profile() {
               <Edit3 className="w-4 h-4 text-white" />
             </button>
           </div>
-          <h2 className="mt-4 text-xl font-semibold">{user?.email || "Utilisateur"}</h2>
+          <h2 className="mt-4 text-xl font-semibold">{user?.nom|| "Utilisateur"}</h2>
           <p className="text-gray-400 text-sm">Membre depuis Janvier 2025</p>
 
           {/* Statistiques utilisateur */}
@@ -142,7 +142,7 @@ export default function Profile() {
                 <Phone className="w-5 h-5 text-blue-400 mr-3" />
                 <div>
                   <p className="text-sm text-gray-400">Téléphone</p>
-                  <p>+261 34 00 000 00</p>
+                  <p>{user?.telephone}</p>
                 </div>
               </div>
 
