@@ -30,24 +30,24 @@ class Evenement extends Model
 
      public function organisateur()
     {
-        return $this->belongsTo(Utilisateur::class);
+        return $this->belongsTo(Utilisateur::class,'organisateur_id');
     }
 
     public function administrateur()
     {
-        return $this->belongsTo(Utilisateur::class);
+        return $this->belongsTo(Utilisateur::class,'administrateur_id');
     }
      public function tarif()
     {
         return $this->belongsTo(Tarif::class);
     }
-    public function evemement_id_for_billet()
+    public function billets()
     {
-        return $this->hasOne(Billet::class, 'evenement_id');
+        return $this->hasMany(Billet::class, 'evenement_id');
     }
-     public function evenement_id_for_payement()
+     public function payments()
     {
-        return $this->hasOne(Payment::class, 'evenement_id');
+        return $this->hasMany(Payment::class, 'evenement_id');
     }
 }
 

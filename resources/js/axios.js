@@ -1,24 +1,19 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://10.0.0.141:8000/api", // URL de ton backend Laravel
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  },
-  withCredentials: false, // Mets true si tu utilises des cookies (sanctum)
+  baseURL: "http://10.0.0.141:8000/api",
 });
 
-// 🔹 Intercepteur pour gérer les erreurs globalement (optionnel)
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Exemple : si token expiré => logout
-    if (error.response && error.response.status === 401) {
-      console.error("Non autorisé, token expiré ou invalide");
+// Intercepteur pour attacher le token à chaque requête
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-    return Promise.reject(error);
-  }
+    return config;
+  },
+  (error) => Promise.reject(error)
 );
 
 export default api;

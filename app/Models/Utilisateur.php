@@ -22,9 +22,9 @@ class Utilisateur extends Model
     {
         return $this->hasOne(Evenement::class, 'administrateur_id');
     }
-    public function client_id_for_payment()
+    public function billet()
     {
-        return $this->hasOne(Payment::class, 'client_id');
+        return $this->hasMany(Billet::class, 'client_id');
     }
 
 

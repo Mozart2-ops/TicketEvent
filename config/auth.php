@@ -38,8 +38,15 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'utilisateurs',
         ],
+         'api' => [
+        'driver' => 'token', // ou 'passport' si tu utilises Passport
+        'provider' => 'utilisateurs',
+        'hash' => false,
+        'input_key' => 'token',          // nom du paramètre si tu passes par GET/POST
+        'storage_key' => 'remember_token'
+    ],
     ],
 
     /*
@@ -61,6 +68,11 @@ return [
 
     'providers' => [
         'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+            // Ajoute celui pour ta table
+            'utilisateurs' => [
             'driver' => 'eloquent',
             'model' => App\Models\Utilisateur::class,
         ],

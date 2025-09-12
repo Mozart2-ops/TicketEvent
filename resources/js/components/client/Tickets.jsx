@@ -1,69 +1,35 @@
 import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import useTickets from "../../hooks/useTickets";
 import { motion } from "framer-motion";
-import {
-  Download,
-  Calendar,
-  MapPin,
-  Clock,
-  User,
-  QrCode
-} from "lucide-react";
+import { Download, Calendar, MapPin, Clock, User } from "lucide-react";
 
 export default function Ticket() {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
+  const { tickets, loading, error } = useTickets();
 
-  // Données simulées des tickets (tableau d'objets)
-  const tickets = [
-    {
-      id: "TKT-2025-001",
-      event: "Concert Gospel Madagascar",
-      date: "12 Septembre 2025",
-      time: "18:00",
-      location: "Stade Mahamasina",
-      price: "20 000 Ar",
-      seat: "Général Admission",
-      orderId: "CMD-2025-001",
-      purchaseDate: "10 Septembre 2025",
-      qrCode: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TKT-2025-001"
-    },
-    {
-      id: "TKT-2025-002",
-      event: "Festival Jazz Antananarivo",
-      date: "15 Octobre 2025",
-      time: "19:30",
-      location: "Jardin d'Andohalo",
-      price: "25 000 Ar",
-      seat: "VIP Zone A",
-      orderId: "CMD-2025-002",
-      purchaseDate: "05 Octobre 2025",
-      qrCode: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TKT-2025-002"
-    },
-    {
-      id: "TKT-2025-003",
-      event: "Spectacle Traditionnel",
-      date: "20 Novembre 2025",
-      time: "16:00",
-      location: "Palais de la Reine",
-      price: "15 000 Ar",
-      seat: "Zone Standard",
-      orderId: "CMD-2025-003",
-      purchaseDate: "12 Novembre 2025",
-      qrCode: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TKT-2025-003"
-    }
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 text-gray-200 flex items-center justify-center">
+        <p>Chargement des tickets...</p>
+      </div>
+    );
+  }
 
-  // Si un ID spécifique est fourni dans l'URL, filtrer les tickets
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-950 text-gray-200 flex items-center justify-center">
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  // Filtrer les tickets pour un ID spécifique si fourni
   const filteredTickets = id
-    ? tickets.filter(ticket => ticket.id === id)
+    ? tickets.filter(ticket => ticket.id === parseInt(id))
     : tickets;
-
-  const handleDownload = (ticketId) => {
-    // Logique pour télécharger un ticket spécifique
-    alert(`Téléchargement du ticket ${ticketId} bientôt disponible!`);
-  };
 
   if (filteredTickets.length === 0) {
     return (
@@ -75,6 +41,10 @@ export default function Ticket() {
       </div>
     );
   }
+
+  const handleDownload = (ticketId) => {
+    alert(`Téléchargement du ticket ${ticketId} bientôt disponible!`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-200 py-8">
@@ -92,7 +62,6 @@ export default function Ticket() {
           </p>
         </motion.div>
 
-        {/* Liste des tickets */}
         {filteredTickets.map((ticket, index) => (
           <motion.div
             key={ticket.id}
@@ -102,10 +71,9 @@ export default function Ticket() {
             className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl overflow-hidden shadow-2xl mb-6"
           >
             <div className="p-6 text-white">
-              {/* En-tête */}
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h2 className="text-xl font-bold">{ticket.event}</h2>
+                  <h2 className="text-xl font-bold">{ticket.evenement?.titre}</h2>
                   <p className="text-blue-100 text-sm">#{ticket.id}</p>
                 </div>
                 <button
@@ -116,51 +84,47 @@ export default function Ticket() {
                 </button>
               </div>
 
-              {/* QR Code */}
               <div className="flex justify-center mb-6">
                 <div className="bg-white p-4 rounded-xl">
                   <img
-                    src={ticket.qrCode}
+                    src={ticket.qr_code}
                     alt="QR Code"
                     className="w-40 h-40 mx-auto"
                   />
                 </div>
               </div>
 
-              {/* Détails du ticket */}
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  <span className="text-sm">{ticket.date}</span>
+                  <span className="text-sm">{ticket.evenement?.dateEvenement}</span>
                 </div>
                 <div className="flex items-center">
                   <Clock className="w-4 h-4 mr-2" />
-                  <span className="text-sm">{ticket.time}</span>
+                  <span className="text-sm">{ticket.evenement?.heure}</span>
                 </div>
                 <div className="flex items-center col-span-2">
                   <MapPin className="w-4 h-4 mr-2" />
-                  <span className="text-sm">{ticket.location}</span>
+                  <span className="text-sm">{ticket.evenement?.lieu}</span>
                 </div>
                 <div className="flex items-center col-span-2">
                   <User className="w-4 h-4 mr-2" />
-                  <span className="text-sm">{user?.prenom || user?.nom || user?.email || "Utilisateur"}</span>
+                  <span className="text-sm">{user?.prenom || user?.nom || "Utilisateur"}</span>
                 </div>
               </div>
 
-              {/* Type de billet et prix */}
               <div className="flex justify-between items-center pt-4 border-t border-white/20">
                 <div>
                   <p className="text-sm text-blue-100">Type</p>
-                  <p className="font-medium">{ticket.seat}</p>
+                  <p className="font-medium">{ticket.billet_type || "Général"}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-blue-100">Prix</p>
-                  <p className="font-medium">{ticket.price}</p>
+                  <p className="font-medium">{ticket.evenement?.tarif?.montant}</p>
                 </div>
               </div>
             </div>
 
-            {/* Informations supplémentaires pour chaque ticket */}
             <div className="bg-gray-900 p-5">
               <h3 className="font-semibold mb-4 text-white">Informations importantes</h3>
               <ul className="space-y-3 text-sm text-gray-400">
@@ -180,7 +144,7 @@ export default function Ticket() {
 
               <div className="mt-6 pt-4 border-t border-gray-800">
                 <p className="text-xs text-gray-500">
-                  Référence: {ticket.orderId} • Acheté le {ticket.purchaseDate}
+                  Référence: {ticket.id} • Acheté le {ticket.date_de_payment}
                 </p>
               </div>
             </div>

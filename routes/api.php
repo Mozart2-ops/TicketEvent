@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\EvenementController;
+use App\Http\Controllers\BilletController;
+use App\Models\Billet;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +24,5 @@ Route::post('/login', [InscriptionController::class, 'login']);
 Route::get('/evenements', [EvenementController::class, 'index']);
 Route::get('/evenements/{id}', [EvenementController::class, 'show']);
 
-
+Route::middleware('auth:api')->get('/tickets', [BilletController::class, 'index']);
+Route::middleware('auth:api')->get('/tickets/{id}', [BilletController::class, 'show']);
