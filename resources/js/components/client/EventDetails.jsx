@@ -263,12 +263,12 @@ export default function EventDetails() {
                 <h2 className="text-xl font-bold mb-4">Organisateur</h2>
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">{evenement?.utilisateur?.nom?.[0] || "U"}{evenement?.utilisateur?.nom?.[1] || ""}</span>
+                    <span className="text-white font-bold text-sm">{evenement?.administrateur?.nom?.[0] || "U"}{evenement?.administrateur?.nom?.[1] || ""}</span>
                   </div>
                   <div>
-                    <p className="font-medium">{evenement?.organisateur?.nom}</p>
-                    <p className="text-gray-400 text-sm">{evenement?.organisateur?.telephone}</p>
-                    <p className="text-gray-400 text-sm">{evenement?.organisateur?.statut}</p>
+                    <p className="font-medium">{evenement?.administrateur?.nom}</p>
+                    <p className="text-gray-400 text-sm">{evenement?.administrateur?.telephone}</p>
+                    <p className="text-gray-400 text-sm">orgTicketEvent@gmail.com</p>
                   </div>
                 </div>
               </motion.div>
