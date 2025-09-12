@@ -28,18 +28,18 @@ class Evenement extends Model
         'tarif_id'
     ];
 
-     public function org()
+     public function organisateur()
     {
-        return $this->belongsTo(Utilisateur::class, 'organisateur_id');
+        return $this->belongsTo(Utilisateur::class);
     }
 
-    public function admin()
+    public function administrateur()
     {
-        return $this->belongsTo(Utilisateur::class, 'administration_id');
+        return $this->belongsTo(Utilisateur::class);
     }
      public function tarif()
     {
-        return $this->belongsTo(Tarif::class, 'tarif_id');
+        return $this->belongsTo(Tarif::class);
     }
     public function evemement_id_for_billet()
     {

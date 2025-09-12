@@ -21,7 +21,7 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [featuredEvents, setFeaturedEvents] = useState([]);
-  const [setLoading] = useState(true);
+  const [recharge,setRecharge] = useState(true);
   const baseUrl = "http://10.0.0.141:8000/storage/images/";
     // ===== DONNÉES DES ÉVÉNEMENTS =====
   const { evenements, loading, error } = useEvenement();
@@ -41,7 +41,7 @@ export default function Home() {
     // Simuler un appel API avec un délai
     const timer = setTimeout(() => {
       setFeaturedEvents(evenements.slice(0, 3));
-      setLoading(false);
+      setRecharge(false);
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -51,11 +51,11 @@ export default function Home() {
 
   // ===== FONCTIONS DE FILTRAGE =====
   const filteredEvents = evenements.filter(event =>
-    (activeCategory === "Tous" || event.category === activeCategory) &&
-    event.title.toLowerCase().includes(search.toLowerCase())
+    (activeCategory === "Tous" || event.categorie === activeCategory) &&
+    event.titre.toLowerCase().includes(search.toLowerCase())
   );
-
-  const trendingEvents = [...evenements].sort((a, b) => b.views - a.views).slice(0, 3);
+ // Les trois premier évenement
+  const trendingEvents = evenements.slice(0, 3);
 
   // ===== CONFIGURATION DU SLIDER =====
   const sliderSettings = {
@@ -480,7 +480,7 @@ export default function Home() {
                       </div>
                       <div className="flex justify-between items-center mt-3">
                         <span className="bg-gray-900/70 text-white text-sm px-3 py-1.5 rounded-full font-medium">
-                          20 000
+                           {event.tarif?.montant}
                         </span>
                         <span className="flex items-center text-sm text-white bg-gray-900/70 px-2 py-1 rounded-full">
                           <Star className="w-4 h-4 mr-1 text-yellow-400 fill-current" />
@@ -588,7 +588,7 @@ export default function Home() {
                         className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       <span className="absolute top-3 right-3 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-semibold shadow-md">
-                       20 000
+                      {event.tarif?.montant} Ar
                       </span>
                       <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-gray-900 to-transparent"></div>
                     </div>
@@ -622,7 +622,7 @@ export default function Home() {
 
                       <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-800">
                         <span className="text-xs text-gray-500">
-                          {event.ticketsAvailable} places restantes
+                          {event.nombre_de_place} places restantes
                         </span>
                         <button className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-full transition">
                           Réserver

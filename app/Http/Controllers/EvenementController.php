@@ -9,8 +9,17 @@ class EvenementController extends Controller
 {
     public function index()
     {
-        $evenements = Evenement::all();
-
+        $evenements = Evenement::with('tarif')->get();
         return response()->json($evenements);
     }
+     public function show($id)
+    {
+        $evenement = Evenement::with(['organisateur','administrateur', 'tarif'])->find($id);
+
+        if (!$evenement) {
+            return response()->json(['message' => 'Événement introuvable'], 404);
+        }
+
+        return response()->json($evenement);
+        }
 }

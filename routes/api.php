@@ -20,5 +20,6 @@ Route::post('/register', [InscriptionController::class, 'store']);
 Route::post('/login', [InscriptionController::class, 'login']);
 
 Route::get('/evenements', [EvenementController::class, 'index']);
+Route::get('/evenements/{id}', [EvenementController::class, 'show']);
 
 
