@@ -48,7 +48,7 @@ function App() {
             }
           />
           <Route
-            path="/payment/:eventId"
+            path="/payment/:id"
             element={
               <PrivateRoute>
                 <Payment />

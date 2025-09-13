@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InscriptionController;
 use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\BilletController;
-use App\Models\Billet;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +26,4 @@ Route::get('/evenements/{id}', [EvenementController::class, 'show']);
 
 Route::middleware('auth:api')->get('/tickets', [BilletController::class, 'index']);
 Route::middleware('auth:api')->get('/tickets/{id}', [BilletController::class, 'show']);
+Route::middleware('auth:api')->post('/payments', [PaymentController::class, 'store']);

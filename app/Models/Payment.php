@@ -13,7 +13,10 @@ class Payment extends Model
      [
         'type',
         'date_de_payment',
-        'client_id',
         'billet_id'
     ];
+    public function billet()
+    {
+        return $this->belongsTo(Billet::class, 'billet_id');
+    }
 }

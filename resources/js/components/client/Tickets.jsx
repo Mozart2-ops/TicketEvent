@@ -4,8 +4,9 @@ import { AuthContext } from "../../context/AuthContext";
 import useTickets from "../../hooks/useTickets";
 import { motion } from "framer-motion";
 import { Download, Calendar, MapPin, Clock, User } from "lucide-react";
+import { QRCodeCanvas } from "qrcode.react";
 
-export default function Ticket() {
+export default function Ticket({ billet }) {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const { tickets, loading, error } = useTickets();
@@ -86,11 +87,7 @@ export default function Ticket() {
 
               <div className="flex justify-center mb-6">
                 <div className="bg-white p-4 rounded-xl">
-                  <img
-                    src={ticket.qr_code}
-                    alt="QR Code"
-                    className="w-40 h-40 mx-auto"
-                  />
+                 <QRCodeCanvas value={ticket.qr_code} />
                 </div>
               </div>
 
